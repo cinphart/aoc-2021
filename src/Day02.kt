@@ -27,12 +27,6 @@ fun main() {
         }
     }
 
-    fun List<Int>.countDecreases(): Int {
-        return drop(1).fold(Pair(0, first())) { acc, e ->
-            Pair((if (e > acc.second) acc.first + 1 else acc.first), e)
-        }.first
-    }
-
     fun part1(asDirs: List<Pair<Direction, Int>?>): Int {
         var result = asDirs.fold(Pair(0, 0)) { acc: Pair<Int, Int>, e: Pair<Direction, Int>? ->
             e?.let {

@@ -1,12 +1,12 @@
 fun main() {
-    fun List<String>.asInts() : List<Int> {
+    fun List<String>.asInts(): List<Int> {
         return map { a -> Integer.parseInt(a) }
     }
 
-    fun List<Int>.countDecreases() : Int {
-        return drop(1).fold(Pair(0, first())) { acc, e ->
-            Pair((if (e > acc.second) acc . first +1 else acc.first), e)
-        }.first
+    fun List<Int>.countDecreases(): Int {
+        return windowed(2).fold(0) { acc, e ->
+            if (e[0] < e[1]) acc + 1 else acc
+        }
     }
 
     fun part1(asInts: List<Int>): Int {
@@ -14,8 +14,8 @@ fun main() {
     }
 
     fun part2(input: List<Int>): Int {
-        return input.drop(2).mapIndexed {
-            i, v -> v + input[i] + input[i+1]
+        return input.windowed(3).map {
+            it[0] + it[1] + it[2]
         }.countDecreases()
     }
 
