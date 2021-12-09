@@ -1,5 +1,4 @@
 import java.util.*
-import kotlin.math.abs
 
 fun main() {
 
@@ -40,31 +39,57 @@ fun main() {
         val four = input.find { it.size == 4 }!!
         val eight = input.find { it.size == 7 }!!
         val len6 = input.filter { it.size == 6 }
-        val six = len6.find { ! it.containsAll(one) }!!
+        val six = len6.find { !it.containsAll(one) }!!
         val segf = six.find { one.contains(it) }!!
         val segc = one.find { !six.contains(it) }!!
         val len5 = input.filter { it.size == 5 }
         val three = len5.find { it.containsAll(one) }!!
-        val two = len5.find { it.contains(segc) && ! it.contains(segf) }
-        val five = len5.find { it.contains(segc) && ! it.contains(segf) }
+        val two = len5.find { it.contains(segc) && !it.contains(segf) }!!
+        val five = len5.find { !it.contains(segc) && it.contains(segf) }!!
+        val nine = len6.find { it.containsAll(five) && it.contains(segc) }!!
+        val zero = len6.find { it != six && it != nine }!!
 
+        return mapOf(
+            one to 1,
+            two to 2,
+            three to 3,
+            four to 4,
+            five to 5,
+            six to 6,
+            seven to 7,
+            eight to 8,
+            nine to 9,
+            zero to 0
+        )
+    }
 
-        return mapOf(one to 1)
+    fun determineResult(mapping: Map<SortedSet<Char>, Int>, digits: List<SortedSet<Char>>): Int {
+        return digits.fold(0) { a, dd ->
+            a * 10 + mapping[dd]!!
+        }
+    }
+
+    fun String.splitIgnoreEmpty(d: String): List<String> {
+        return this.split(d).filter { s -> s.isNotEmpty() }
     }
 
     fun part2(input: List<String>): Int {
 
-
-        return input.size
+        return input.map { s -> s.split("|") }.fold(0) { a, s ->
+            a + determineResult(
+                determineDigits(s[0].splitIgnoreEmpty(" ").map { s -> normalizeString(s) }),
+                s[1].splitIgnoreEmpty(" ").map { s -> normalizeString(s) }
+            )
+        }
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day08_test")
     check(part1(testInput) == 26)
-    //check(part2(testInput) == 168)
+    check(part2(testInput) == 61229)
 
 
     val input = readInput("Day08")
     println(part1(input))
-    //println(part2(input))
+    println(part2(input))
 }
