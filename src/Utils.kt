@@ -16,3 +16,9 @@ fun List<String>.asInts(): List<Int> = map{Integer.parseInt(it.trim())}
 
 fun String.splitToInts(sep : Char = ',') = trim().split(sep).filter{it.length>0}.map{Integer.parseInt(it.trim())}
 
+fun List<String>.digitArray() =
+    map { s ->
+        s.map {
+            Integer.parseInt("$it")
+        }
+    }

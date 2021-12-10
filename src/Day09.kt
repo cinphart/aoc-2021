@@ -9,13 +9,6 @@ fun main() {
 
     val offsets = arrayOf(0 to 1, 1 to 0, -1 to 0, 0 to -1);
 
-    fun List<String>.digitArray() =
-        map { s ->
-            s.map {
-                Integer.parseInt("$it")
-            }
-        }
-
     fun lowPoint(terrain: List<List<Int>>, x: Int, y: Int): Boolean =
         offsets.all { (dx, dy) ->
             pt(terrain, x + dx, y + dy).let {
