@@ -19,8 +19,7 @@ fun main() {
             e.value.map { p -> p.second }
         }
 
-        val result = paths("start", edges, setOf("start"));
-        return result
+        return paths("start", edges, setOf("start"))
     }
 
     fun paths2(node: String, edges: Map<String, List<String>>, visited: Map<String, Int>) : Int {
@@ -29,7 +28,6 @@ fun main() {
         val seen = if (node.all { it.isLowerCase()}) visited.plus(node to (visited[node]?:0)+1) else visited
         return edges[node]!!.filter{ it != "start"}.fold(0) {
                 a, nn ->
-            println("Checking paths for $node -> $nn (${visited})")
             a + paths2(nn, edges, seen)
         }
     }
@@ -44,9 +42,7 @@ fun main() {
             e.value.map { p -> p.second }
         }
 
-        val result = paths2("start", edges, mapOf("start" to 0 ));
-        println("result: ${result}")
-        return result
+        return paths2("start", edges, mapOf("start" to 0 ))
     }
 
 // test if implementation meets criteria from the description, like:
