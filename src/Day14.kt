@@ -1,7 +1,6 @@
 val memo = mutableMapOf<Pair<Pair<Char, Char>, Int>, Map<Char, Long>>()
 
 fun main() {
-
     val rule = Regex("(.)(.) -> (.)")
 
 
@@ -22,20 +21,18 @@ fun main() {
         var result = start
         (0..10).forEach {
             result = processRules(result, rules)
-            println(result)
         }
 
         val occurrences = result.groupBy { it }.mapValues { it.value.size }
 
-        println("$occurrences")
-
         return occurrences.values.maxOf { it } - occurrences.values.minOf { it }
     }
 
-    fun mm(m1: Map<Char, Long>, m2: Map<Char, Long>): Map<Char, Long> {
-        return (m1.keys + m2.keys).associateWith {
-            ((m1[it] ?: 0) + (m2[it] ?: 0))
+    fun mm(m1: Map<Char, Long>, m2: Map<Char, Long>, c: Char): Map<Char, Long> {
+        val result = (m1.keys + m2.keys).associateWith {
+            ((m1[it] ?: 0) + (m2[it] ?: 0)) - if (it == c) 1 else 0
         }
+        return result
     }
 
     fun part2(input: List<String>, depth: Int): Long {
@@ -47,37 +44,28 @@ fun main() {
         }.toMap()
 
         var ruleOccurrences = rules.map {
-            it.key to (mapOf<Char, Long>(it.key.second to 1L))
+            it.key to it.key.occurrences()
         }.toMap()
 
-        (0..depth).forEach {
+        (0..depth-1).forEach { depth ->
             ruleOccurrences = ruleOccurrences.map {
                 val key = it.key
                 val insert: Char = rules[key]!!
                 val m1 = ruleOccurrences[it.key.first to insert]!!
-                val m2 = ruleOccurrences[insert to it.key.first]!!
-                it.key to mm(m1, m2)
+                val m2 = ruleOccurrences[insert to it.key.second]!!
+                it.key to mm(m1, m2, insert)
             }.toMap()
         }
 
         val occurrences = start.windowed(2).map { it[0] to it[1] }
             .fold(mapOf<Char, Long>(start[0] to 1)) { acc, p ->
-                mm(acc, ruleOccurrences[p]!!)
+                mm(acc, ruleOccurrences[p]!!, p.first)
             }
-
-        println("${occurrences}")
-
-        println(occurrences.values.maxOf { it })
-        println(occurrences.values.minOf { it })
-        println(occurrences.values.maxOf { it } - occurrences.values.minOf { it })
 
         return occurrences.values.maxOf { it } - occurrences.values.minOf { it }
     }
 
     val testInput = readInput("Day14_test")
-    part2(testInput, 1)
-    part2(testInput, 2)
-    part2(testInput, 3)
     check(part2(testInput, 10) == 1588L)
 
     val input = readInput("Day14")

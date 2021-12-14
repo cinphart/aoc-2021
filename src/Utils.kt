@@ -22,3 +22,9 @@ fun List<String>.digitArray() =
             Integer.parseInt("$it")
         }
     }
+
+fun <T> List<T>.occurrences(): Map<T, Long> {
+    return groupBy { it }.mapValues { it.value.size.toLong() }
+}
+
+fun <T> Pair<T,T>.occurrences(): Map<T,Long> = listOf(first, second).occurrences()
